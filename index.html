@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Twitter</title>
+    <link rel="stylesheet" href="./style.css">
+    <!--<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    -->
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="login-container" style="display: flex; align-items: center; justify-content:center">
+        <div>
+            <h1>Login</h1>
+            <input id="handle-email">
+            <input id="password">
+            <button id="signin"> Sign In </button>
+            <p>Don't have an account? Create one</p>
+        </div>
+    </div>
+
+    <div class="register-container" style="display: flex; align-items: center; justify-content:center">
+        <div>
+            <h1>Register</h1>
+            <input id="handle">
+            <input id="firstname">
+            <input id="lastname">
+            <input id="email">
+            <input id="password">
+            <input id="confirm-password">
+            <button id="register"> Register </button>
+            <p>Don't have an account? Create one</p>
+        </div>
+    </div>
+
+    <div class="homepage">
+        <div class="feed">
+
+            <div class="tweet whatshappening-container">
+                <div class="left">
+                    <img src="https://i.pinimg.com/originals/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg">
+                </div>
+
+                <div class="right">
+                    <input id="new-tweet" placeholder="What's Happening" style="height: -webkit-fill-available;">
+
+                    <div style="align-self: end;">
+                        <button id="send-tweet">Tweet</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alltweets"> </div>
+            
+        </div>
+    </div>
+
+    <script type="module" src='./script.js'></script>
+
+</body>
+
+
+</html>
