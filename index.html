@@ -11,31 +11,31 @@
 </head>
 
 <body>
-    <div class="login-container" style="display: flex; align-items: center; justify-content:center">
-        <div>
+    <div class="login-container">
+        <div class="inner-container">
             <h1>Login</h1>
-            <input id="handle-email">
-            <input id="password">
+            <input id="handle-email" placeholder="Username or Email">
+            <input id="password" placeholder="Password">
             <button id="signin"> Sign In </button>
-            <p>Don't have an account? Create one</p>
+            <p id="create-account">Don't have an account? Create one</p>
         </div>
     </div>
 
-    <div class="register-container" style="display: flex; align-items: center; justify-content:center">
-        <div>
+    <div class="register-container" style="display: none;">
+        <div class="inner-container">
             <h1>Register</h1>
-            <input id="handle">
-            <input id="firstname">
-            <input id="lastname">
-            <input id="email">
-            <input id="password">
-            <input id="confirm-password">
+            <input id="handle" placeholder="Username">
+            <input id="firstname" placeholder="First Name">
+            <input id="lastname" placeholder="Last Name">
+            <input id="email" placeholder="Email">
+            <input id="password" placeholder="Password">
+            <input id="confirm-password" placeholder="Confirm Password">
             <button id="register"> Register </button>
-            <p>Don't have an account? Create one</p>
+            <p id="have-account">Have an account? Sign In</p>
         </div>
     </div>
 
-    <div class="homepage">
+    <div class="homepage" style="display: none;">
         <div class="feed">
 
             <div class="tweet whatshappening-container">

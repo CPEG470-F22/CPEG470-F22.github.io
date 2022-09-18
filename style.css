@@ -1,3 +1,20 @@
+.login-container, .login-container div,
+.register-container, .register-container div {
+  display: flex; 
+  align-items: center;
+  justify-content:center;
+}
+
+.inner-container {
+  flex-direction: column;
+  border: 1px solid grey;
+  border-radius: 1em;
+  padding: 2em;
+}
+
+.inner-container input {
+  margin-bottom: 1em;
+}
 
 .homepage {
   display: flex;
@@ -5,7 +22,7 @@
 }
 
 .feed {
-  width: 75vw;
+  width: 55vw;
   border: 1px solid gray;
   border-bottom: 0px;
 }

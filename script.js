@@ -29,65 +29,74 @@ var lastname;
 var handle;
 var UID;
 
-//returns formatted date for message timestamp
+//returns formatted date for tweet timestamp
 let getFormattedDate = function(){
     var d = new Date();
     d = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2) + " " + ('0' + d.getHours()).slice(-2) + ":" + ('0' + d.getMinutes()).slice(-2) + ":" + ('0' + d.getSeconds()).slice(-2);
     return d;
 }
 
+// hide login container, show register container
+$("#create-account").on('click', ()=>{
+    $(".register-container")[0].style['display'] = 'flex';
+    $(".login-container")[0].style['display'] = 'none';
+});
+
+// hide register container, show login container
+$("#have-account").on('click', ()=>{
+    $(".register-container")[0].style['display'] = 'none';
+    $(".login-container")[0].style['display'] = 'flex';
+});
+
 //log in a user that already exists
 $("#signin").on("click", ()=>{
     let user = $(".login-container #handle-email").val();
     let pwd = $(".login-container #password").val();
-    let email = '';
 
     //user can sign in with email or handle
     if (user.includes("@")){
-        email = user;    
+        signIn(auth, user, pwd);  
     } else {
-        rtdb.get(rtdb.ref(db, `/usernames/${handle}/`)).then(
-            data=>{
-                email = data.email;
+        rtdb.get(rtdb.ref(db, `/usernames/${user}/`)).then(
+            response=>{
+                signIn(auth, response.val().email, pwd);
             }).catch(function(error) {    });
     }
+});
 
-    //BUG: THIS HAPPENS BEFORE EMAIL IS SET WHEN SIGNING IN WITH HANDLE
+function signIn(auth, email, pwd){
     fbauth.signInWithEmailAndPassword(auth, email, pwd).then(
-        somedata=>{
-            
-            console.log(somedata.user);
-            UID = somedata.user.uid;
+        response=>{
+            console.log(response.user);
+            UID = response.user.uid;
             
             //set user to be online
             let userRef = rtdb.ref(db, `/users/${UID}`);
             rtdb.update(userRef, {online: true});
             //get the handle, firstname, and lastname
-            rtdb.get(userRef).then(ss=>{ 
-                let data=ss.val();
+            rtdb.get(userRef).then(response=>{ 
+                let data=response.val();
                 handle = data['basic-info'].handle;
                 firstname = data['basic-info'].firstname;
                 lastname = data['basic-info'].lastname;
             });
 
+            // hide login container, show homepage
+            $(".login-container")[0].style['display'] = 'none';
+            $(".homepage")[0].style['display'] = 'flex';
+
             //render all tweets when a user signs in
-            let tweetsRef = rtdb.ref(db, `/tweets/`);
-            rtdb.get(tweetsRef).then(tweets=>{ 
-                tweets = tweets.val();
-                for(let tweetID in tweets){
-                    renderTweet(tweets[tweetID]);
-                }
-            });
+            loadTweets();
             
         }).catch(function(error) {    });
-});
-
+}
 
 // register a new user
 $("#register").on("click", ()=>{
     let email = $(".register-container #email").val();
     let password = $(".register-container #password").val();
     let confirmPassword = $(".register-container #confirm-password").val();
+    
     if (password != confirmPassword){
       alert("Passwords don't match");
       return;
@@ -95,21 +104,19 @@ $("#register").on("click", ()=>{
     
     //check if the handle already exists
     handle = $('.register-container #handle').val();
-
     let usernamesRef = rtdb.ref(db, `/usernames/${handle}`);
-    rtdb.get(usernamesRef).then(ss=>{ 
-
-        if(ss.val() != null){
+    rtdb.get(usernamesRef).then(response=>{ 
+        if(response.val() != null){
             // user with this handle already exists
             alert("Username taken");
         } else {
             // create a new user
-            fbauth.createUserWithEmailAndPassword(auth, email, password).then(somedata=>{
-                UID = somedata.user.uid;
+            fbauth.createUserWithEmailAndPassword(auth, email, password).then(response=>{
+                UID = response.user.uid;
                 firstname = $('.register-container #firstname').val()
                 lastname = $('.register-container #lastname').val()
 
-                //create the user
+                //create the user object
                 let userRef = rtdb.ref(db, `/users/${UID}`);
                 let data = {"basic-info": {
                                 "handle": handle,
@@ -124,22 +131,24 @@ $("#register").on("click", ()=>{
                 };
                 rtdb.set(userRef, data);
 
-                // add username
-                //create the user
+                // add username to list of usernames
                 let usernamesRef = rtdb.ref(db, `/usernames/${handle}`);
                 data = {
                         "uuid": UID,
                         "email": $('.register-container #email').val()
                     };
                 rtdb.set(usernamesRef, data);
+
+                // hide register container, show homepage
+                $(".register-container")[0].style['display'] = 'none';
+                $(".homepage")[0].style['display'] = 'flex';
+
+                loadTweets();
             
             }).catch(function(error) { console.log(error)});
         }
-        
     });
-    
 });
-
 
 // send a tweet
 $("#send-tweet").on("click", ()=>{
@@ -158,7 +167,19 @@ $("#send-tweet").on("click", ()=>{
     renderTweet(data);
 });
 
-function renderTweet(data){
+// load and render all tweets 
+function loadTweets(){
+    let tweetsRef = rtdb.ref(db, `/tweets/`);
+    rtdb.get(tweetsRef).then(response=>{ 
+        let tweets = response.val();
+        for(let tweetID in tweets){
+            renderTweet(tweets[tweetID], tweetID);
+        }
+    });
+}
+
+// render an individual tweet
+function renderTweet(data, tweetID){
     $('#alltweets').prepend(`
     <div class="tweet">
         <div class="left">
