@@ -181,12 +181,10 @@ function loadTweets(){
 // render an individual tweet
 function renderTweet(data, tweetID){
     $('#alltweets').prepend(`
-    <div class="tweet">
-        <div class="left">
-            <img src="https://i.pinimg.com/originals/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg">
-        </div>
+    <div class="tweet card">
+        <img src="https://i.pinimg.com/originals/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg">
 
-        <div class="right">
+        <div class="card-body right">
             <div class="top" style="display: flex;">
                 <p id="user-name">${data.author.firstname} ${data.author.lastname}</p>
 
@@ -202,4 +200,11 @@ function renderTweet(data, tweetID){
             </div>
         </div>
     </div>`)
+
+    $("#alltweets .tweet").hover((event)=>{
+        event.currentTarget.classList.add('card-header');
+    }, (event)=>{
+        event.currentTarget.classList.remove('card-header');
+    }, );
 }
+

@@ -23,15 +23,19 @@
 
 .feed {
   width: 55vw;
-  border: 1px solid gray;
-  border-bottom: 0px;
+  border-bottom: 1px solid rgba(0,0,0,.125) !important;
+}
+
+.card {
+  border-radius: 0px !important;
 }
 
 .tweet {
-  display: flex; 
-  flex-direction: row; 
-  padding: 0 1em;
-  border-bottom: 1px solid gray;
+  flex-direction: row !important;
+  padding: 0 1em !important;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 0 !important;
 }
 
 .right {
@@ -77,10 +81,6 @@ img {
 
 .whatshappening-container {
   width: -webkit-fill-available;
-}
-
-.whatshappening-container .left {
-  margin-bottom: 1em;
 }
 
 .whatshappening-container input {
