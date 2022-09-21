@@ -22,7 +22,7 @@
 }
 
 .feed {
-  width: 55vw;
+  width: 30vw;
   border-bottom: 1px solid rgba(0,0,0,.125) !important;
 }
 
@@ -43,6 +43,7 @@
   flex-direction: column;
   height: inherit;
   width: inherit;
+  padding-bottom: 5px !important;
 }
 
 .right p {
@@ -52,6 +53,10 @@
 .top p {
   margin-bottom: 0px;
   color: rgb(65, 65, 65);
+}
+
+i {
+  padding-right: 5px;
 }
 
 #user-name {
@@ -90,8 +95,6 @@ img {
 
 #send-tweet {
   margin: 5px;
-  background-color: lightblue;
   border-radius: 20px;
-  border: 0px;
   padding: 5px 30px;
 }

@@ -163,8 +163,9 @@ $("#send-tweet").on("click", ()=>{
         timestamp: getFormattedDate()
     };
 
-    rtdb.push(tweetsRef, data);
-    renderTweet(data);
+    rtdb.push(tweetsRef, data).then((response)=>{
+        renderTweet(data, response.key);
+    });
 });
 
 // load and render all tweets 
@@ -174,14 +175,43 @@ function loadTweets(){
         let tweets = response.val();
         for(let tweetID in tweets){
             renderTweet(tweets[tweetID], tweetID);
+            // add buttons listeners
+            likesListener(tweetID);
         }
+    });
+}
+
+function likesListener(tweetID){
+    $(`#${tweetID} #like`).on('click', (event)=>{
+        let tweetLikesRef = rtdb.ref(db, `/tweets/${tweetID}/likes`);
+        rtdb.get(tweetLikesRef).then(response=>{
+            let data = response.val();
+            // tweet currently has 0 likes, first person to like 
+            if (data == null){
+                rtdb.update(tweetLikesRef, { [UID] : true });
+                event.currentTarget.childNodes[2].data = 1;
+            } else {
+                // likes is not an empty object
+                let likes = Object.keys(data).length;
+                // am i liking or unliking the message?
+                if(Object.keys(data).includes(UID)){
+                    //if I have previously liked the message - remove like
+                    rtdb.update(tweetLikesRef, { [UID] : null });
+                    event.currentTarget.childNodes[2].data = likes - 1;
+                } else {
+                    //not currently in liked list - add like
+                    rtdb.update(tweetLikesRef, { [UID] : true });
+                    event.currentTarget.childNodes[2].data = likes + 1;
+                }
+            }
+        });
     });
 }
 
 // render an individual tweet
 function renderTweet(data, tweetID){
     $('#alltweets').prepend(`
-    <div class="tweet card">
+    <div class="tweet card" id=${tweetID}>
         <img src="https://i.pinimg.com/originals/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg">
 
         <div class="card-body right">
@@ -197,6 +227,20 @@ function renderTweet(data, tweetID){
             </div>
             <div class="body" style="display: flex;">
                 <p>${data.content}</p>
+            </div>
+            <div class="bottom-buttons row" style="display: flex;">
+                <div class="col-3"> 
+                    <button class="btn btn-primary" id="comment"> <i class="fa fa-comment"></i>${data.comments ? Object.keys(data.comments).length : 0}</button>
+                </div>
+                <div class="col-3"> 
+                    <button class="btn btn-primary" id="like"> <i class="fa fa-heart"></i>${data.likes ? Object.keys(data.likes).length : 0}</button> 
+                </div>
+                <div class="col-3"> 
+                    <button class="btn btn-primary" id="retweet"> <i class="fa fa-retweet"></i>${data.retweets ? Object.keys(data.retweets).length : 0}</button> 
+                </div>
+                <div class="col-3"> 
+                    <button class="btn btn-primary" id="share"> <i class="fa fa-share"></i>${data.shares ? Object.keys(data.shares).length : 0}</button> 
+                </div>
             </div>
         </div>
     </div>`)

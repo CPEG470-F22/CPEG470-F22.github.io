@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Twitter</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
@@ -13,9 +14,9 @@
     <div class="login-container">
         <div class="inner-container">
             <h1>Login</h1>
-            <input id="handle-email" placeholder="Username or Email">
-            <input id="password" placeholder="Password">
-            <button id="signin"> Sign In </button>
+            <input class="form-control" id="handle-email" placeholder="Username or Email">
+            <input class="form-control" id="password" type="password" placeholder="Password">
+            <button class="btn btn-primary" id="signin"> Sign In </button>
             <p id="create-account">Don't have an account? Create one</p>
         </div>
     </div>
@@ -23,13 +24,13 @@
     <div class="register-container" style="display: none;">
         <div class="inner-container">
             <h1>Register</h1>
-            <input id="handle" placeholder="Username">
-            <input id="firstname" placeholder="First Name">
-            <input id="lastname" placeholder="Last Name">
-            <input id="email" placeholder="Email">
-            <input id="password" placeholder="Password">
-            <input id="confirm-password" placeholder="Confirm Password">
-            <button id="register"> Register </button>
+            <input class="form-control" id="handle" placeholder="Username">
+            <input class="form-control" id="firstname" placeholder="First Name">
+            <input class="form-control" id="lastname" placeholder="Last Name">
+            <input class="form-control" id="email" placeholder="Email">
+            <input class="form-control" type="password" id="password" placeholder="Password">
+            <input class="form-control" type="password" id="confirm-password" placeholder="Confirm Password">
+            <button class="btn btn-primary" id="register"> Register </button>
             <p id="have-account">Have an account? Sign In</p>
         </div>
     </div>
@@ -44,7 +45,7 @@
                     <input id="new-tweet" placeholder="What's Happening" style="height: -webkit-fill-available;">
 
                     <div style="align-self: end;">
-                        <button id="send-tweet">Tweet</button>
+                        <button class="btn btn-primary" id="send-tweet">Tweet</button>
                     </div>
                 </div>
             </div>
