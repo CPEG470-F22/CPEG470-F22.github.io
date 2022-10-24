@@ -36,16 +36,35 @@ let getFormattedDate = function(){
     return d;
 }
 
-// hide login container, show register container
-$("#create-account").on('click', ()=>{
+function showRegister(){
     $(".register-container")[0].style['display'] = 'flex';
     $(".login-container")[0].style['display'] = 'none';
+    $(".homepage")[0].style['display'] = 'none';
+}
+
+function showLogin(){
+    $(".register-container")[0].style['display'] = 'none';
+    $(".login-container")[0].style['display'] = 'flex';
+    $(".homepage")[0].style['display'] = 'none';
+}
+
+function showHome(){
+    $(".register-container")[0].style['display'] = 'none';
+    $(".login-container")[0].style['display'] = 'none';
+    $(".homepage")[0].style['display'] = 'flex';
+    loadTweets();
+}
+
+// hide login container, show register container
+$("#create-account").on('click', ()=>{
+    window.location = location.protocol + "//" + location.hostname + ':' + location.port + "/register";
+    //showRegister();
 });
 
 // hide register container, show login container
 $("#have-account").on('click', ()=>{
-    $(".register-container")[0].style['display'] = 'none';
-    $(".login-container")[0].style['display'] = 'flex';
+    window.location = location.protocol + "//" + location.hostname + ':' + location.port + "/login";
+    //showLogin();
 });
 
 //log in a user that already exists
@@ -81,12 +100,12 @@ function signIn(auth, email, pwd){
                 lastname = data['basic-info'].lastname;
             });
 
-            // hide login container, show homepage
-            $(".login-container")[0].style['display'] = 'none';
-            $(".homepage")[0].style['display'] = 'flex';
+            // hide login container, show homepage    
+            window.location = location.protocol + "//" + location.hostname + ':' + location.port + "/home";
+            //showHome();
 
             //render all tweets when a user signs in
-            loadTweets();
+            
             
         }).catch(function(error) {    });
 }
@@ -159,6 +178,7 @@ $("#send-tweet").on("click", ()=>{
             firstname: firstname,
             lastname: lastname 
         },
+        retweets: 0,
         content: $('#new-tweet').val(), 
         timestamp: getFormattedDate()
     };
@@ -177,6 +197,7 @@ function loadTweets(){
             renderTweet(tweets[tweetID], tweetID);
             // add buttons listeners
             likesListener(tweetID);
+            //retweetsListener(tweetID);
         }
     });
 }
@@ -208,6 +229,29 @@ function likesListener(tweetID){
     });
 }
 
+
+// function retweetsListener(tweetID){
+//     $(`#${tweetID} #retweet`).on('click', (event)=>{
+//         let tweetRetweetsRef = rtdb.ref(db, `/tweets/${tweetID}/retweets`);
+//         rtdb.get(tweetRetweetsRef).then(response=>{
+//             let rtCount = response.val();
+
+//             // increase retweet count, update view + update database
+//             rtCount += 1; 
+//             event.currentTarget.childNodes[2].data = rtCount;
+//             rtdb.update(tweetRetweetsRef.parent, {'retweets': rtCount});
+
+//             // retweet the tweet
+//             // rtdb.get(tweetRetweetsRef.parent).then((response)=>{
+//             //     let tweet = response.val();
+//             //     tweet['retweeter'] = handle;
+//             // });
+
+//         });
+//     });
+// }
+
+
 // render an individual tweet
 function renderTweet(data, tweetID){
     $('#alltweets').prepend(`
@@ -230,16 +274,16 @@ function renderTweet(data, tweetID){
             </div>
             <div class="bottom-buttons row" style="display: flex;">
                 <div class="col-3"> 
-                    <button class="btn btn-primary" id="comment"> <i class="fa fa-comment"></i>${data.comments ? Object.keys(data.comments).length : 0}</button>
+                    <button class="btn btn-primary disabled" id="comment"> <i class="fa fa-comment"></i>${data.comments ? Object.keys(data.comments).length : 0}</button>
                 </div>
                 <div class="col-3"> 
                     <button class="btn btn-primary" id="like"> <i class="fa fa-heart"></i>${data.likes ? Object.keys(data.likes).length : 0}</button> 
                 </div>
                 <div class="col-3"> 
-                    <button class="btn btn-primary" id="retweet"> <i class="fa fa-retweet"></i>${data.retweets ? Object.keys(data.retweets).length : 0}</button> 
+                    <button class="btn btn-primary disabled" id="retweet"> <i class="fa fa-retweet"></i>${data.retweets ? Object.keys(data.retweets).length : 0}</button> 
                 </div>
                 <div class="col-3"> 
-                    <button class="btn btn-primary" id="share"> <i class="fa fa-share"></i>${data.shares ? Object.keys(data.shares).length : 0}</button> 
+                    <button class="btn btn-primary disabled" id="share"> <i class="fa fa-share"></i>${data.shares ? Object.keys(data.shares).length : 0}</button> 
                 </div>
             </div>
         </div>
@@ -251,4 +295,32 @@ function renderTweet(data, tweetID){
         event.currentTarget.classList.remove('card-header');
     }, );
 }
+
+
+$(document).ready(function(){
+    //STEP 1: given any URL determine if it is one the "routes" I want to honor
+    //Home page
+    //User Profile
+    //Forum Topic
+    let paths = document.location.pathname.split("/");
+    let subapp = paths[1];
+    switch (subapp){
+      case "register":
+        showRegister();
+        break;
+      case "login":
+        showLogin();
+        break;
+      case "home":
+        // check if user is signed in first
+        showHome();
+        break;
+      default:
+        // default to login page
+        showLogin();
+        // document.location.pathname = '/login';
+    }
+
+  });
+
 
